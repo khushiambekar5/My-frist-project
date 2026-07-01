@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device=device-width, initial-scale=1.0">
+    <title>Track My Issue - College Issue Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === NEW UNIQUE COLOR SCHEME === */
+        :root {
+            --primary-color: #2563EB;      /* Purple */
+            --accent-color: #3B82F6;        /* Orange-Gold */
+            --secondary-color: #60A5FA;     /* Pink */
+            --dark-bg: #0F172A;             /* Deep Indigo */
+            --light-bg: #EFF6FF;            /* Warm Cream */
+            --card-bg: #FFFFFF;             /* White */
+            --text-dark: #1E3A8A;           /* Dark Gray */
+            --text-light: #F8FAFC;          /* Light */
+            --gradient: linear-gradient(135deg, #8B5CF6, #60A5FA, #3B82F6);
+            --gradient-dark: linear-gradient(135deg, #0F172A, #1D4ED8, #2563EB);
+        }
+
+        * { 
+            margin: 0; padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; 
+            scroll-behavior: smooth; 
+        }
+        body { 
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE); 
+            color: var(--text-dark); 
+            overflow-x: hidden; 
+        }
+
+        /* LOGIN SCREEN */
+        .login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--gradient-dark);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%; max-width: 400px;
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-box h2 { 
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px; 
+            font-size: 1.8rem;
+        }
+        
+        .login-box input, .login-box select {
+            width: 100%; padding: 15px; margin: 12px 0;
+            border: 2px solid #E5E7EB; border-radius: 12px;
+            outline: none; transition: all 0.3s;
+            background: #FAFAFA;
+        }
+
+        .login-box input:focus, .login-box select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .login-box button {
+            width: 100%; padding: 15px;
+            background: var(--gradient);
+            color: white; border: none;
+            border-radius: 12px; font-weight: 600;
+            cursor: pointer; margin-top: 15px;
+            font-size: 1.1rem; transition: all 0.3s;
+        }
+
+        .login-box button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* MAIN APP */
+        #main-app { display: none; }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .logo { 
+            font-size: 1.8rem; font-weight: 700; 
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--text-dark); 
+            margin-left: 25px; 
+            font-weight: 500; 
+            transition: all 0.3s; 
+            cursor: pointer; 
+            position: relative;
+        }
+        
+        .nav-links a:hover { 
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -5px; left: 0; background: var(--gradient);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after { width: 100%; }
+        
+        .logout-btn { color: var(--secondary-color) !important; }
+        /* SECTIONS */
+        section { padding: 100px 5%; }
+        .section-title { 
+            text-align: center; font-size: 3rem; 
+            margin-bottom: 60px; 
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative; 
+        }
+        
+        .section-title::after { 
+            content: ''; width: 100px; height: 5px; 
+            background: var(--gradient); 
+            position: absolute; bottom: -15px; 
+            left: 50%; transform: translateX(-50%); 
+            border-radius: 3px; 
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            background: var(--gradient-dark);
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+            text-align: center; color: var(--text-light); 
+            padding: 20px; position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .hero h1 { 
+            font-size: 4.5rem; margin-bottom: 20px; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease;
+            z-index: 2; position: relative;
+        }
+        
+        .hero p { 
+            font-size: 1.4rem; margin-bottom: 40px; 
+            opacity: 0.95; max-width: 600px;
+            animation: fadeInUp 1s ease 0.3s both;
+            z-index: 2; position: relative;
+        }
+        
+        .btn-group { 
+            display: flex; gap: 25px; 
+            animation: fadeInUp 1s ease 0.6s both;
+            z-index: 2; position: relative;
+        }
+        
+        .btn { 
+            padding: 15px 40px; border-radius: 50px; 
+            text-decoration: none; font-weight: 600; 
+            font-size: 1.1rem; transition: all 0.4s; 
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        
+        .btn-primary { 
+            background: var(--gradient); 
+            color: white; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-secondary { 
+            background: transparent; 
+            border: 3px solid var(--text-light); 
+            color: var(--text-light); 
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn:hover { 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.6);
+        }
+
+        /* DASHBOARD */
+        .dashboard-container {
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .stats-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 25px; margin-top: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            padding: 30px; border-radius: 20px; 
+            text-align: center; 
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 4px; background: var(--gradient);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+        
+        .stat-number { 
+            font-size: 2.5rem; font-weight: 700; 
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* PROFILE */
+        .profile-card {
+            background: var(--card-bg); 
+            padding: 50px; 
+            border-radius: 25px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 40px; 
+            max-width: 900px; margin: 0 auto;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .profile-img {
+            width: 120px; height: 120px; 
+            background: var(--gradient); 
+            border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            color: white; font-size: 2.5rem;
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
+        }
+        /* FEATURE CARDS */
+        .features-grid, .dept-grid, .cat-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+        }
+        
+        .feature-card, .dept-card, .cat-card {
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center; 
+            transition: all 0.4s;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative; overflow: hidden;
+        }
+        
+        .feature-card::before, .dept-card::before, .cat-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 4px; background: var(--gradient);
+        }
+        
+        .feature-card:hover, .dept-card:hover, .cat-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.3);
+        }
+        .review-card:hover {
+            transform: translateY(-10px) scale(1.02) !important;
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.2) !important;
+        }
+        
+        .feature-card i, .dept-card i, .cat-card i {
+            font-size: 3.5rem; 
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px; display: block;
+        }
+
+        /* TIMELINE */
+        .timeline { position: relative; max-width: 900px; margin: 0 auto; }
+        .timeline::after {
+            content: ''; position: absolute; width: 6px;
+            background: var(--gradient); top: 0; bottom: 0; left: 50%;
+            margin-left: -3px; border-radius: 3px;
+        }
+        
+        .step { padding: 20px 50px; position: relative; width: 50%; }
+        .step::after {
+            content: ''; position: absolute; width: 25px; height: 25px;
+            right: -13px; background: var(--card-bg);
+            border: 5px solid var(--accent-color); top: 20px;
+            border-radius: 50%; z-index: 1;
+        }
+        
+        .left { left: 0; text-align: right; }
+        .right { left: 50%; text-align: left; }
+        .right::after { left: -13px; }
+        
+        .step-content {
+            padding: 25px; background: var(--card-bg);
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* TRACK SECTION */
+        .track-section {
+            background: var(--gradient-dark);
+            color: var(--text-light);
+        }
+        
+        .track-box {
+            background: var(--card-bg); padding: 50px;
+            border-radius: 25px; max-width: 700px; margin: 0 auto;
+            color: var(--text-dark);
+        }
+
+        /* MODALS */
+        .modal {
+            display: none; position: fixed; z-index: 3000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); 
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: var(--card-bg); padding: 40px;
+            border-radius: 25px; width: 90%; max-width: 600px;
+            position: relative; animation: slideIn 0.4s ease;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+        
+        .close-btn {
+            position: absolute; top: 20px; right: 25px;
+            font-size: 28px; cursor: pointer; color: #94A3B8;
+            transition: 0.3s;
+        }
+        
+        .close-btn:hover { color: var(--secondary-color); transform: rotate(90deg); }
+
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.8) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .btn-group { flex-direction: column; align-items: center; }
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .timeline::after { left: 35px; }
+            .step { width: 100%; padding-left: 80px; padding-right: 25px; }
+            .step::after { left: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-box">
+            <h2><i class="fas fa-user-graduate"></i> Student Login</h2>
+            <p style="margin-bottom: 25px; color: #94A3B8; font-size: 1.1rem;">Enter your details to access the portal</p>
+            <form onsubmit="return login(event)">
+                <input type="text" id="name" placeholder="Full Name *" required>
+                <input type="text" id="studentId" placeholder="Student ID (e.g., 2023001) *" required>
+                <input type="tel" id="phone" placeholder="Phone Number *" required>
+                <select id="dept" required>
+                    <option value="">Select Department</option>
+                    <option value="CSE">Computer Science (CSE)</option>
+                    <option value="IT">Information Technology (IT)</option>
+                    <option value="CSE-DS">Data Science (CSE-DS)</option>
+                    <option value="FYBE">First Year (FYBE)</option>
+                    <option value="MBA">MBA</option>
+                    <option value="CIVIL">Civil</option>
+                    <option value="ENTC">Electronics (ENTC)</option>
+                    <option value="EEE">Electrical (EEE)</option>
+                </select>
+                <button type="submit"><i class="fas fa-sign-in-alt"></i> Login to Portal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. MAIN APP -->
+    <div id="main-app">
+        <!-- Navigation -->
+        <nav>
+            <div class="logo">Track My Issue</div>
+            <div class="nav-links">
+                <a onclick="navigateTo('home')"><i class="fas fa-home"></i> Home</a>
+                <a onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a onclick="navigateTo('profile')"><i class="fas fa-user"></i> Profile</a>
+                <a onclick="openFeedbackModal()"><i class="fas fa-comment"></i> Feedback</a>
+                <a onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </nav>
+
+        <!-- HOME VIEW -->
+        <div id="home-view" class="view-section">
+            <!-- HERO -->
+            <section class="hero">
+                <h1>Track My Issue</h1>
+                <p>Raise It. Track It. Fix It. ✨</p>
+                <p style="font-size: 1.2rem; margin-top: -10px; opacity: 0.9;">Smart platform connecting students with departments for lightning-fast issue resolution</p>
+                <div class="btn-group">
+                    <a href="#categories" class="btn btn-primary" onclick="scrollToSection('categories')">
+                        <i class="fas fa-plus-circle"></i> Register Complaint
+                    </a>
+                    <a href="#track" class="btn btn-secondary" onclick="scrollToSection('track')">
+                        <i class="fas fa-search"></i> Track Issue
+                    </a>
+                </div>
+            </section>
+
+            <!-- ABOUT -->
+            <section id="about" class="hidden">
+                <h2 class="section-title">About Track My Issue</h2>
+                <div class="about-content" style="text-align: center; max-width: 900px; margin: 0 auto 60px; line-height: 1.8; color: #6B7280; font-size: 1.1rem;">
+                    <p>Track My Issue is a centralized complaint management system designed to bridge the gap between students and administrative departments. We ensure transparent tracking, faster issue resolution, and seamless communication.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>🚀 Easy Submission</h3>
+                        <p>Simple form to log complaints in seconds.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>⚡ Real-Time Tracking</h3>
+                        <p>Know exactly where your complaint stands.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-comments"></i>
+                        <h3>🔒 Transparent</h3>
+                        <p>Direct communication with department heads.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DEPARTMENTS -->
+            <section id="departments" class="hidden" style="background: linear-gradient(135deg, #EFF6FF, #DBEAFE);">
+                <h2 class="section-title">Connected Departments</h2>
+                <div class="dept-grid">
+                    <div class="dept-card" onclick="openDeptModal('IT Department', 'Dr. Sharma', '9876543210', 'Network & Software Issues')">
+                        <i class="fas fa-laptop-code"></i>
+                        <div><h4>IT Department</h4><small>Network & Software Issues</small></div>
+                    </div>
+                    <div class="dept-card" onclick="openDeptModal('CSE Department', 'Prof. Verma', '9876543211', 'Lab Equipment & Tools')">
+                        <i class="fas fa-cogs"></i>
+                        <div><h4>CSE Department</h4><small>Lab Equipment & Tools</small></div>
+                    </div>
+                    <div class="dept-card" onclick="openDeptModal('CSE-DS Department', 'Prof. Das', '9876123211', 'Data Science Labs')">
+                        <i class="fas fa-database"></i>
+                        <div><h4>CSE-DS</h4><small>Data Science Labs</small></div>
+                    </div>
+                    <div class="dept-card" onclick="openDeptModal('First Year Dept', 'Prof. Mehta', '9976125511', 'FYBE Issues')">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div><h4>First Year Dept</h4><small>FYBE Issues</small></div>
+                    </div>
+                    <div class="dept-card" onclick="openDeptModal('MBA Department', 'Prof. Sen', '9864177211', 'MBA Facilities')">
+                        <i class="fas fa-briefcase"></i>
+                        <div><h4>MBA Department</h4><small>MBA Facilities</small></div>
+                    </div>
+                    <div class="dept-card" onclick="openDeptModal('Civil', 'Dr. Singh', '9876543212', 'Building & Infrastructure')">
+                        <i class="fas fa-hard-hat"></i>
+                        <div><h4>Civil</h4><small>Building & Infrastructure</small></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORIES -->
+            <section id="categories" class="hidden">
+                <h2 class="section-title">Complaint Categories</h2>
+                <div class="cat-grid">
+                    <div class="cat-card" onclick="openComplaintModal('Faculty Issue')">
+                        <i class="fas fa-user-tie"></i><p>Faculty Issue</p>
+                    </div>
+                    <div class="cat-card" onclick="openComplaintModal('AC / Fan')">
+                        <i class="fas fa-snowflake"></i><p>AC / Fan</p>
+                    </div>
+                    <div class="cat-card" onclick="openComplaintModal('Water Supply')">
+                        <i class="fas fa-faucet"></i><p>Water Supply</p>
+                    </div>
+                    <div class="cat-card" onclick="openComplaintModal('Cleaning')">
+                        <i class="fas fa-broom"></i><p>Cleaning</p>
+                    </div>
+                    <div class="cat-card" onclick="openComplaintModal('WiFi')">
+                        <i class="fas fa-wifi"></i><p>WiFi</p>
+                    </div>
+                    <div class="cat-card" onclick="openComplaintModal('Exam Related')">
+                        <i class="fas fa-book"></i><p>Exam Related</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TRACK -->
+            <section id="track" class="track-section hidden">
+                <h2 class="section-title" style="color: var(--text-light);">Track Your Issue</h2>
+                <div class="track-box">
+                    <p style="font-size: 1.2rem; margin-bottom: 30px;">Enter your Complaint ID to check status</p>
+                    <div class="input-group" style="display: flex; gap: 15px; margin-bottom: 25px;">
+                        <input type="text" id="complaintId" placeholder="e.g., CMP-2023-001" style="flex: 1;">
+                        <button class="track-btn" onclick="trackComplaint()" style="padding: 15px 30px; border-radius: 12px;">
+                            <i class="fas fa-search"></i> Track
+                        </button>
+                    </div>
+                    <div id="status-result" style="min-height: 40px;"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view" class="view-section" style="display: none; padding-top: 120px;">
+            <div class="dashboard-container">
+                <h2 style="font-size: 2.5rem; margin-bottom: 10px;">Welcome back, <span id="user-name-display" style="background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></span>! ✨</h2>
+                <p style="color: #6B7280; font-size: 1.2rem;">Here's your complaint summary</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-comp">0</div>
+                        <p>Total Complaints</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pending-comp">0</div>
+                        <p>Pending</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="resolved-comp">0</div>
+                        <p>Resolved</p>
+                    </div>
+                </div>
+
+                <h3 style="margin: 50px 0 30px 0; font-size: 1.8rem;">Your Recent Complaints</h3>
+                <div id="complaints-list" style="background: linear-gradient(135deg, #EFF6FF, #DBEAFE); padding: 30px; border-radius: 20px; min-height: 100px;">
+                    <p style="color: #6B7280; font-style: italic;">No complaints submitted yet. <i class="fas fa-plus-circle" style="color: var(--primary-color);"></i></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div id="profile-view" class="view-section" style="display: none; padding-top: 120px;">
+            <div class="profile-card">
+                <div class="profile-img">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-info">
+                    <h3 id="profile-name" style="font-size: 2.2rem; margin-bottom: 15px;">Student Name</h3>
+                    <p><strong>Student ID:</strong> <span id="profile-id" style="color: var(--primary-color); font-weight: 600;">00000</span></p>
+                    <p><strong>Department:</strong> <span id="profile-dept" style="color: var(--accent-color); font-weight: 600;">CSE</span></p>
+                    <p><strong>Phone:</strong> <span id="profile-phone">1234567890</span></p>
+                    <p><strong>Total Complaints:</strong> <span id="profile-total" style="color: var(--secondary-color);">0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer style="background: var(--gradient-dark); color: var(--text-light); text-align: center; padding: 40px; margin-top: 100px;">
+            <p style="font-size: 1.1rem;">&copy; 2023 Track My Issue. All Rights Reserved. | <strong>Final Project Presentation</strong></p>
+        <div style="margin-top:20px;"><button onclick="openFeedbackModal()" style="padding:12px 24px;border:none;border-radius:10px;background:linear-gradient(135deg,#2563EB,#60A5FA);color:white;cursor:pointer;"><i class="fas fa-comment-dots"></i> Give Feedback</button></div></footer>
+    </div>
+
+    <!-- COMPLAINT MODAL -->
+    <div id="complaint-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('complaint-modal')">&times;</span>
+            <h3 style="font-size: 1.8rem;"><i class="fas fa-exclamation-circle"></i> Submit Complaint</h3>
+            <p id="complaint-category-name" style="color: var(--primary-color); font-size: 1.2rem; font-weight: 600; margin-bottom: 20px;"></p>
+            <form onsubmit="return submitComplaint(event)">
+                <input type="text" id="complaint-title" placeholder="Complaint Title *" required>
+                <textarea id="complaint-desc" rows="4" placeholder="Describe your issue in detail..." required style="resize: vertical;"></textarea>
+                <select id="complaint-dept" required>
+                    <option value="">Select Department</option>
+                    <option value="IT">IT Department</option>
+                    <option value="CSE">Computer Science</option>
+                    <option value="CSE-DS">Data Science</option>
+                    <option value="FYBE">First Year Department</option>
+                    <option value="MBA">MBA Department</option>
+                    <option value="CIVIL">Civil</option>
+                    <option value="ENTC">Electronics (ENTC)</option>
+                    <option value="EEE">Electrical (EEE)</option>
+                </select>
+                <button type="submit" style="margin-top: 20px;"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DEPARTMENT MODAL -->
+    <div id="dept-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('dept-modal')">&times;</span>
+            <h3 style="font-size: 1.8rem;"><i class="fas fa-building"></i> Department Contact</h3>
+            <div id="dept-contact-info" class="contact-info" style="background: linear-gradient(135deg, #EFF6FF, #DBEAFE); padding: 30px; border-radius: 20px; margin-top: 20px;">
+            </div>
+        </div>
+    </div>
+    <!-- FEEDBACK MODAL (NEW) -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close-btn" onclick="closeModal('feedback-modal')">&times;</span>
+            <h3 style="font-size: 1.9rem; margin-bottom: 10px;"><i class="fas fa-comment-dots"></i> Share Your Feedback</h3>
+            <p style="color: var(--primary-color); margin-bottom: 25px; font-weight: 600;">Help us improve! Your opinion matters ⭐</p>
+            
+            <form onsubmit="return submitFeedback(event)">
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 25px;">
+                    <i class="fas fa-star" data-rating="1" style="font-size: 2rem; color: #D1D5DB; cursor: pointer; transition: 0.2s;" onclick="setRating(1)"></i>
+                    <i class="fas fa-star" data-rating="2" style="font-size: 2rem; color: #D1D5DB; cursor: pointer; transition: 0.2s;" onclick="setRating(2)"></i>
+                    <i class="fas fa-star" data-rating="3" style="font-size: 2rem; color: #D1D5DB; cursor: pointer; transition: 0.2s;" onclick="setRating(3)"></i>
+                    <i class="fas fa-star" data-rating="4" style="font-size: 2rem; color: #D1D5DB; cursor: pointer; transition: 0.2s;" onclick="setRating(4)"></i>
+                    <i class="fas fa-star" data-rating="5" style="font-size: 2rem; color: #D1D5DB; cursor: pointer; transition: 0.2s;" onclick="setRating(5)"></i>
+                </div>
+                <input type="text" id="feedback-name" placeholder="Your Name *" required style="margin-bottom: 15px;">
+                <textarea id="feedback-comment" rows="5" placeholder="Share your experience..." required style="resize: vertical;"></textarea>
+                <button type="submit" style="margin-top: 20px;">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </form>
+            <div id="feedback-success" style="display: none; text-align: center; margin-top: 20px; padding: 20px; background: #ECFDF5; border-radius: 15px; border: 2px solid #10B981;">
+                <i class="fas fa-check-circle" style="font-size: 2rem; color: #10B981; margin-bottom: 10px;"></i>
+                <h4>Thank you for your feedback! 🎉</h4>
+                <p>We appreciate your time and will review it soon.</p>
+            </div>
+        </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Global user data
+        let currentUser = {};
+
+        // 1. Login
+        function login(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const id = document.getElementById('studentId').value;
+            const phone = document.getElementById('phone').value;
+            const dept = document.getElementById('dept').value;
+
+            const btn = event.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Store user data
+                currentUser = { name, id, phone, dept };
+                
+                // Update UI
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                
+                updateProfileDisplay();
+                initScrollAnimations();
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        // 2. Update Profile Display
+        function updateProfileDisplay() {
+            document.getElementById('user-name-display').textContent = currentUser.name;
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-id').textContent = currentUser.id;
+            document.getElementById('profile-dept').textContent = currentUser.dept;
+            document.getElementById('profile-phone').textContent = currentUser.phone;
+            document.getElementById('profile-total').textContent = "5"; // Demo
+        }
+
+        // 3. Navigation
+        function navigateTo(viewId) {
+            document.querySelectorAll('.view-section').forEach(view => {
+                view.style.display = 'none';
+            });
+            document.getElementById(viewId + '-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // 4. Scroll to Section
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 5. Logout
+        function logout() {
+            if(confirm("Are you sure you want to logout?")) {
+                document.getElementById('main-app').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+                document.querySelector('#login-screen form').reset();
+            }
+        }
+
+        // 6. Complaint Modal
+        function openComplaintModal(category) {
+            document.getElementById('complaint-category-name').textContent = "Category: " + category;
+            document.getElementById('complaint-modal').style.display = 'flex';
+        }
+        // FEEDBACK FUNCTIONS
+        let feedbackRating = 0;
+        
+        function openFeedbackForm() {
+            document.getElementById('feedbackForm').style.display = 'flex';
+        }
+        
+        function closeFeedbackForm() {
+            document.getElementById('feedbackForm').style.display = 'none';
+            document.getElementById('feedbackForm').querySelector('form').reset();
+            feedbackRating = 0;
+            document.getElementById('ratingStars').textContent = '☆☆☆☆☆';
+        }
+        
+        // Add star rating click events
+        document.addEventListener('DOMContentLoaded', function() {
+            const starsContainer = document.getElementById('ratingStars');
+            if (starsContainer) {
+                starsContainer.innerHTML = '';
+                for(let i = 1; i <= 5; i++) {
+                    const star = document.createElement('span');
+                    star.textContent = '☆';
+                    star.style.cursor = 'pointer';
+                    star.style.margin = '0 2px';
+                    star.style.transition = '0.2s';
+                    star.onclick = () => setFeedbackRating(i);
+                    starsContainer.appendChild(star);
+                }
+            }
+        });
+        
+        function setFeedbackRating(rating) {
+            feedbackRating = rating;
+            const stars = document.querySelectorAll('#ratingStars span');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.textContent = '★';
+                    star.style.color = '#FCD34D';
+                } else {
+                    star.textContent = '☆';
+                    star.style.color = '#D1D5DB';
+                }
+            });
+        }
+        
+        function submitFeedback(event) {
+            event.preventDefault();
+            
+            if (feedbackRating === 0) {
+                alert('Please select a rating first! ⭐');
+                return;
+            }
+            
+            const name = document.getElementById('fbName').value;
+            const comment = document.getElementById('fbComment').value;
+            
+            // Success message
+            alert(`✅ Thank you ${name}!\n\nYour ${feedbackRating}/5 rating & feedback received!\n"${comment.substring(0, 50)}..."`);
+            
+            closeFeedbackForm();
+            console.log(`FEEDBACK: ${feedbackRating}⭐ by ${name}: ${comment}`);
+        }
+
+        // 7. Department Modal
+        function openDeptModal(deptName, sirName, phone, description) {
+            const info = `
+                <p><strong>🏢 Department:</strong> ${deptName}</p>
+                <p><strong>📝 Handles:</strong> ${description}</p>
+                <p><strong>👨‍🏫 Head:</strong> ${sirName}</p>
+                <p><strong>📞 Contact:</strong> <a href="tel:${phone}" style="color: var(--primary-color); font-weight: 600; font-size: 1.2rem;">${phone}</a></p>
+            `;
+            document.getElementById('dept-contact-info').innerHTML = info;
+            document.getElementById('dept-modal').style.display = 'flex';
+        }
+
+        // 8. Close Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        // 15. FEEDBACK FUNCTIONS (NEW)
+        let currentRating = 0;
+        
+        function openFeedbackModal() {
+            document.getElementById('feedback-modal').style.display = 'flex';
+            currentRating = 0;
+            document.getElementById('feedback-success').style.display = 'none';
+        }
+        
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('#feedback-modal .fa-star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.style.color = '#FCD34D';
+                } else {
+                    star.style.color = '#D1D5DB';
+                }
+            });
+        }
+        
+        function submitFeedback(event) {
+            event.preventDefault();
+            
+            if (currentRating === 0) {
+                alert('Please select a rating ⭐');
+                return false;
+            }
+            
+            const name = document.getElementById('feedback-name').value;
+            const comment = document.getElementById('feedback-comment').value;
+            
+            // Show success
+            document.querySelector('#feedback-modal form').style.display = 'none';
+            document.getElementById('feedback-success').style.display = 'block';
+            
+            console.log(`⭐ Feedback: ${currentRating}/5 by ${name}: ${comment}`);
+            
+            // Reset after 3 seconds
+            setTimeout(() => {
+                closeModal('feedback-modal');
+                document.querySelector('#feedback-modal form').style.display = 'block';
+                document.querySelector('#feedback-modal form').reset();
+            }, 3000);
+            
+            return false;
+        }
+
+        // 9. Submit Complaint
+        function submitComplaint(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('complaint-title').value;
+            const desc = document.getElementById('complaint-desc').value;
+            const dept = document.getElementById('complaint-dept').value;
+            const category = document.getElementById('complaint-category-name').textContent.replace('Category: ', '');
+            
+            // Generate unique ID
+            const complaintId = `CMP-${new Date().getFullYear()}-${Math.floor(Math.random() * 999).toString().padStart(3, '0')}`;
+            
+            // Update dashboard (demo data)
+            let total = parseInt(document.getElementById('total-comp').innerText) || 0;
+            let pending = parseInt(document.getElementById('pending-comp').innerText) || 0;
+            
+            document.getElementById('total-comp').innerText = total + 1;
+            document.getElementById('pending-comp').innerText = pending + 1;
+            
+            // Add to recent complaints list
+            const list = document.getElementById('complaints-list');
+            const complaintItem = document.createElement('div');
+            complaintItem.style.cssText = 'background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary-color); box-shadow: 0 5px 15px rgba(0,0,0,0.1);';
+            complaintItem.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <strong style="color: var(--primary-color); font-size: 1.2rem;">${complaintId}</strong>
+                    <span style="background: #FCD34D; color: #92400E; padding: 5px 15px; border-radius: 20px; font-weight: 600;">Pending</span>
+                </div>
+                <p><strong>${title}</strong></p>
+                <small style="color: #6B7280;">${category} • ${dept} • ${new Date().toLocaleDateString()}</small>
+            `;
+            
+            list.innerHTML = '';
+            list.appendChild(complaintItem);
+            
+            // Success notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 100px; right: 20px; z-index: 4000;
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                color: white; padding: 20px 30px; border-radius: 15px;
+                box-shadow: 0 20px 40px rgba(139,92,246,0.4);
+                transform: translateX(400px); transition: all 0.4s;
+                font-weight: 600; max-width: 350px;
+            `;
+            notification.innerHTML = `
+                <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+                Complaint Submitted Successfully!<br>
+                <small style="font-weight: 400; opacity: 0.9;">Your ID: <strong>${complaintId}</strong></small>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.remove();
+                closeModal('complaint-modal');
+                event.target.reset();
+            }, 4000);
+        }
+
+        // 10. Track Complaint
+        function trackComplaint() {
+            const idInput = document.getElementById('complaintId').value.trim();
+            const resultDiv = document.getElementById('status-result');
+            
+            if(!idInput) {
+                resultDiv.innerHTML = '<span style="color: #EF4444;">❌ Please enter Complaint ID</span>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: var(--primary-color);"></i> Checking status...';
+            
+            setTimeout(() => {
+                const statuses = [
+                    { text: "📥 New", color: "#FCD34D", desc: "Just submitted" },
+                    { text: "🔄 In Progress", color: "#3B82F6", desc: "Department working on it" },
+                    { text: "✅ Resolved", color: "#10B981", desc: "Issue fixed!" },
+                    { text: "⏳ On Hold", color: "#3B82F6", desc: "Waiting for approval" }
+                ];
+                
+                const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                resultDiv.innerHTML = `
+                    <div style="background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--text-dark); margin-bottom: 15px;">Complaint ID: <strong>${idInput}</strong></h3>
+                        <div class="status-badge" style="
+                            background: ${randomStatus.color}; 
+                            color: white; padding: 12px 30px; 
+                            border-radius: 30px; font-size: 1.3rem; 
+                            font-weight: 700; display: inline-block;
+                            box-shadow: 0 5px 15px ${randomStatus.color}20;
+                        ">
+                            ${randomStatus.text}
+                        </div>
+                        <p style="margin-top: 15px; color: #6B7280; font-style: italic;">${randomStatus.desc}</p>
+                    </div>
+                `;
+            }, 2000);
+        }
+
+        // 11. Scroll Animations
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.hidden').forEach(el => {
+                el.classList.add('hidden');
+                observer.observe(el);
+            });
+        }
+
+        // 12. Close modals on outside click
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // 13. Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // 14. Add loading animation to hero
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        console.log('🎉 Track My Issue loaded successfully! Ready for presentation!');
+    </script>
+</body>
+</html>
